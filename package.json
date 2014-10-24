@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "express": "*",
+    "later": "1.1.6",
+    "urllib": "^1.5.2",
+    "twit": "1.1.18",
+    "wordnet": "0.2.10"
+  }
+}
