@@ -9,24 +9,39 @@ app.set("views", __dirname);
 // Set EJS as templating language WITH html as an extension)
 app.engine('.html', ejs.__express);
 app.set('view engine', 'html');
+
+// express on its own has no notion
+// of a "file". The express.static()
+// middleware checks for a file matching
+// the `req.path` within the directory
+// that you pass it. In this case "GET /js/app.js"
+// will look for "./public/js/app.js".
+
+app.use(express.static(__dirname + '/public'));
+
 app.get('/', function (req, res) {
   res.render('index.html');
 });
 app.get('/hello', function (req, res) {
-  console.log("yeah")
+  //console.log("yeah")
   action(function (result) {
-    console.log(result)
+    //console.log(result)
     res.send(result);
   });
 });
 app.listen(3000);
 
 //action();
-
-var basic = {
-  h: [23],
-  m: [50]
+var schedule = {
+  schedules: [{
+    h: [23],
+    m: [50]
+  }]
 };
+var sched = later.schedule(schedule);
+var t = later.setInterval(function () {
+  action();
+}, sched);
 
 function action(callback) {
   if (callback === null) {
