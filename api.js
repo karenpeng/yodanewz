@@ -12,11 +12,11 @@ function askForArticle() {
   // }
   // today = yyyy.toString() + mm.toString() + dd.toString();
   //console.log(today);
-  var key = '38ca745c014db64d4d8be1fc7dbfbc94:10:68849499';
-  var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-section/1.json?offset=100&&api-key=' + key;
+  var key = '27040b4bee6aa5cb4566382081236916:1:70052092';
+  var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/1.json?api-key=' + key;
   urllib.request(url, function (err, data, res) {
     if (err) {
-      throw err;
+      //throw err;
     }
     console.log(data.toString());
     // rawData = {
@@ -24,7 +24,7 @@ function askForArticle() {
     //   "abstract": data.abstract,
 
     // };
-    count(data.abstract);
+    //count(data.abstract);
   });
 }
 

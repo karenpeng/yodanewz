@@ -1,0 +1,24 @@
+<audio id="test1"></audio>
+<a id="test2"></a>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+  $.ajax({
+    url: '/hello',
+    method: 'GET',
+    dataType: 'json',
+    error: function(err){
+      throw err;
+    },
+    success:function(data){
+      console.log(data);
+      //var saying = encodeURIComponent(data.result);
+      var postSentence = data.result.replace(/ /g, '+');
+      var url = 'http://tts-api.com/tts.mp3?q='+postSentence;
+      document.getElementById('test1').setAttribute("src", url);
+      document.getElementById('test1').play();
+       document.getElementById('test2').innerHTML = data.url;
+      document.getElementById('test2').setAttribute("href",data.url);
+    }
+  })
+
+</script>
