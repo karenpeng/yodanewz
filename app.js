@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var ejs = require('ejs');
 var fs = require("fs");
+var bodyParser = require('body-parser');
 var later = require('later');
 // Set up the view directory
 app.set("views", __dirname);
@@ -10,14 +11,13 @@ app.set("views", __dirname);
 app.engine('.html', ejs.__express);
 app.set('view engine', 'html');
 
-// express on its own has no notion
-// of a "file". The express.static()
-// middleware checks for a file matching
-// the `req.path` within the directory
-// that you pass it. In this case "GET /js/app.js"
-// will look for "./public/js/app.js".
-
 app.use(express.static(__dirname + '/public'));
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
   res.render('index.html');
@@ -38,10 +38,10 @@ var schedule = {
     m: [50]
   }]
 };
-var sched = later.schedule(schedule);
-var t = later.setInterval(function () {
-  action();
-}, sched);
+// var sched = later.schedule(schedule);
+// var t = later.setInterval(function () {
+//   action();
+// }, sched);
 
 function action(callback) {
   if (callback === null) {

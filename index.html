@@ -1,130 +1,73 @@
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-<style>
-  html,body{
-    padding: 0;
-    margin: 0;
-    top: 0;
-    left: 0;
-  }
-  @font-face{
-    font-family: Proggy;
-    src: url(font/ProggyClean.ttf);
-  }
-  body{
-    background-color: blue;
-    color: white;
-    font-family: Proggy;
-  }
-  #test4{
-    position: absolute;
-    width: 800px;
-    height: 300px;
-    /*border: 1px solid white;*/
-    top: 50%;
-    left: 50%;
-    margin-top: -150px;
-    margin-left: -400px;
-  }
-  #test3{
-    font-size: 30px;
-    /*padding: 10px;*/
-  }
-  #test2{
-    font-size: 20px;
-    color: white;
-  }
-  #test2 :hover{
-    cursor: pointer;
-  }
-  pre{
+<html>
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body>
+    <audio id="voice"></audio>
+    <div id="wrap">
+      <pre>
+        <font>
+          .--.          ____    ____  ______    _______       ___        .__   __.  ___________    __    ____  ________
+::\`--._,'.::.`._.--'/::\   \  /   / /  __  \  |       \     /   \       |  \ |  | |   ____\   \  /  \  /   / |       /
+::::.  ` __::__ '  .:::: \   \/   / |  |  |  | |  .--.  |   /  ^  \      |   \|  | |  |__   \   \/    \/   /  `---/  /
+::::::-:.`'..`'.:-::::::  \_    _/  |  |  |  | |  |  |  |  /  /_\  \     |  . `  | |   __|   \            /      /  /
+::::::::\ `--' /::::::::    |  |    |  `--'  | |  '--'  | /  _____  \    |  |\   | |  |____   \    /\    /      /  /----.
+::::::::::\  /:::::::::     |__|     \______/  |_______/ /__/     \__\   |__| \__| |_______|   \__/  \__/      /________|
+        </font>
+      </pre>
+      <div id="wrap2">
+        <p>NEWZ FROM TODAY:</p>
+        <span id='newz'></span>
+        <span id="blinking">_</span>
+        <a id="link"></a>
+      </div>
+      <div id="wrap3">
+       <p id="hint">TO CHECK NEWZ IN ΩTHER DATE, TYPE IN YYYY/MM/DD:</p>
+      </div>
+   </div>
+  </body>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+  <script type="text/javascript">
 
-  }
-</style>
-<audio id="test1"></audio>
-<div id="test4">
-  <span id="test3"></span>
-  <a id="test2"></a>
-  <pre>
-  <font>
-::\`--._,'.::.`._.--'/::
-::::.  ` __::__ '  .::::
-::::::-:.`'..`'.:-::::::
-::::::::\ `--' /::::::::
-</font>
-</pre>
-</div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript">
-  $.ajax({
-    url: '/hello',
-    method: 'GET',
-    dataType: 'json',
-    error: function(err){
-      throw err;
-    },
-    success:function(data){
-      console.log(data);
-      //var saying = encodeURIComponent(data.result);
-      var postSentence = data.result.replace(/ /g, '+');
-      var url = 'http://tts-api.com/tts.mp3?q='+postSentence;
-      document.getElementById('test1').setAttribute("src", url);
-      document.getElementById('test1').play();
-      document.getElementById('test2').setAttribute("href",data.url);
-      for(var i = 0; i<data.result.length; i++){
-       saveNum(i);
-      }
-      function saveNum(num){
-        setTimeout(function(){
-          blah(num);
-        },num*100);
-      }
+/*
+                    ____
+                  _.' :  `._
+              .-.'`.  ;   .'`.-.
+     __      / : ___\ ;  /___ ; \      __
+   ,'_ ""--.:__;".-.";: :".-.":__;.--"" _`,
+   :' `.t""--.. '&lt;@.`;_  ',@&gt;` ..--""j.' `;
+        `:-.._J '-.-'L__ `-- ' L_..-;'
+          "-.__ ;  .-"  "-.  : __.-"
+              L ' /.------.\ ' J
+               "-.   "--"   .-"
+              __.l"-:_JL_;-";.__
+           .-j/'.;  ;""""  / .'\"-.
+         .' /:`. "-.:     .-" .';  `.
+      .-"  / ;  "-. "-..-" .-"  :    "-.
+   .+"-.  : :      "-.__.-"      ;-._   \
+   ; \  `.; ;                    : : "+. ;
+   :  ;   ; ;                    : ;  : \:
+   ;  :   ; :                    ;:   ;  :
+  : \  ;  :  ;                  : ;  /  ::
+  ;  ; :   ; :                  ;   :   ;:
+  :  :  ;  :  ;                : :  ;  : ;
+  ;\    :   ; :                ; ;     ; ;
+  : `."-;   :  ;              :  ;    /  ;
+   ;    -:   ; :              ;  : .-"   :
+   :\     \  :  ;            : \.-"      :
+    ;`.    \  ; :            ;.'_..--  / ;
+    :  "-.  "-:  ;          :/."      .'  :
+     \         \ :          ;/  __        :
+      \       .-`.\        /t-""  ":-+.   :
+       `.  .-"    `l    __/ /`. :  ; ; \  ;
+         \   .-" .-"-.-"  .' .'j \  /   ;/
+          \ / .-"   /.     .'.' ;_:'    ;
+           :-""-.`./-.'     /    `.___.'
+                 \ `t  ._  /  bug
+                  "-.t-._:'
 
-      function blah(num){
-        $('#test3').append(data.result[num]);
-        if(num === data.result.length-1){
-          document.getElementById('test2').innerHTML = "[Hyperlink]";
-        }
-      }
-    }
-  });
-
-  /*
-                   ____
-                _.' :  `._
-            .-.'`.  ;   .'`.-.
-   __      / : ___\ ;  /___ ; \      __
- ,'_ ""--.:__;".-.";: :".-.":__;.--"" _`,
- :' `.t""--.. '&lt;@.`;_  ',@&gt;` ..--""j.' `;
-      `:-.._J '-.-'L__ `-- ' L_..-;'
-        "-.__ ;  .-"  "-.  : __.-"
-            L ' /.------.\ ' J
-             "-.   "--"   .-"
-            __.l"-:_JL_;-";.__
-         .-j/'.;  ;""""  / .'\"-.
-       .' /:`. "-.:     .-" .';  `.
-    .-"  / ;  "-. "-..-" .-"  :    "-.
- .+"-.  : :      "-.__.-"      ;-._   \
- ; \  `.; ;                    : : "+. ;
- :  ;   ; ;                    : ;  : \:
- ;  :   ; :                    ;:   ;  :
-: \  ;  :  ;                  : ;  /  ::
-;  ; :   ; :                  ;   :   ;:
-:  :  ;  :  ;                : :  ;  : ;
-;\    :   ; :                ; ;     ; ;
-: `."-;   :  ;              :  ;    /  ;
- ;    -:   ; :              ;  : .-"   :
- :\     \  :  ;            : \.-"      :
-  ;`.    \  ; :            ;.'_..--  / ;
-  :  "-.  "-:  ;          :/."      .'  :
-   \         \ :          ;/  __        :
-    \       .-`.\        /t-""  ":-+.   :
-     `.  .-"    `l    __/ /`. :  ; ; \  ;
-       \   .-" .-"-.-"  .' .'j \  /   ;/
-        \ / .-"   /.     .'.' ;_:'    ;
-         :-""-.`./-.'     /    `.___.'
-               \ `t  ._  /  bug
-                "-.t-._:'
-
- */
-
-</script>
+*/
+  </script>
+</html>
