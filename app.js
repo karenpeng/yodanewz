@@ -54,7 +54,19 @@ function action(callback) {
     getNews(function (data) {
       yoDa(data.title, function (result) {
         tweet(result + data.url);
-        var record = new Newz()
+        //var record = new Newz()
+        //save data here man!!!!!!!
+        var date = new Date();
+        var record = new Newz({
+          "year": date.getFullYear(),
+          "month": date.getMonth(),
+          "day": date.getDate(),
+          "saying": result,
+          "url": data.url
+        });
+        record.save(function (err) {
+          if (err) return console.error(err);
+        });
       });
     });
   } else {
@@ -72,7 +84,7 @@ function action(callback) {
 
 function getNews(callback) {
   var urllib = require('urllib');
-  var key = config[keys][nytimeKey];
+  var key = config.keys.nytimeKey;
   var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/1.json?api-key=' + key;
   urllib.request(url, {
     method: 'GET',
@@ -97,7 +109,7 @@ function yoDa(sentence, callback) {
   //console.log(postSentence);
   var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence;
   unirest.get(url)
-    .header("X-Mashape-Key", config[keys][yodaKey])
+    .header("X-Mashape-Key", config.keys.yodaKey)
     .end(function (result) {
       //console.log(result.status, result.headers, result.body);
       callback(result.body);
@@ -108,10 +120,10 @@ function yoDa(sentence, callback) {
 function tweet(something) {
   var Twit = require('twit');
   var T = new Twit({
-    consumer_key: config[keys][consumer_key],
-    consumer_secret: config[keys][consumer_secret],
-    access_token: config[keys][access_token],
-    access_token_secret: config[keys][access_token_secret]
+    consumer_key: config.keys.consumer_key,
+    consumer_secret: config.keys.consumer_secret,
+    access_token: config.keys.access_token,
+    access_token_secret: config.keys.access_token_secret
   });
   T.post('statuses/update', {
     status: something
@@ -121,3 +133,12 @@ function tweet(something) {
     }
   });
 }
+
+var mongoose = require('mongoose');
+mongoose.connect(config.keys.dbName);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback() {
+  // yay!
+  console.log('yay!');
+});
