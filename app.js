@@ -4,6 +4,7 @@ var ejs = require('ejs');
 var fs = require("fs");
 var bodyParser = require('body-parser');
 var later = require('later');
+var config = require('./config.json');
 // Set up the view directory
 app.set("views", __dirname);
 
@@ -44,10 +45,16 @@ var schedule = {
 // }, sched);
 
 function action(callback) {
+  // getNews(function (data) {
+  //   yoDa(data.title, function (result) {
+  //     tweet(result + data.url);
+  //   });
+  // });
   if (callback === null) {
     getNews(function (data) {
       yoDa(data.title, function (result) {
         tweet(result + data.url);
+        var record = new Newz()
       });
     });
   } else {
@@ -65,7 +72,7 @@ function action(callback) {
 
 function getNews(callback) {
   var urllib = require('urllib');
-  var key = '27040b4bee6aa5cb4566382081236916:1:70052092';
+  var key = config[keys][nytimeKey];
   var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/1.json?api-key=' + key;
   urllib.request(url, {
     method: 'GET',
@@ -90,7 +97,7 @@ function yoDa(sentence, callback) {
   //console.log(postSentence);
   var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence;
   unirest.get(url)
-    .header("X-Mashape-Key", "6gjKVLMkAWmshqBsBu01kIupbfiJp1Qu6dRjsn7iA42pUg8yV3")
+    .header("X-Mashape-Key", config[keys][yodaKey])
     .end(function (result) {
       //console.log(result.status, result.headers, result.body);
       callback(result.body);
@@ -101,10 +108,10 @@ function yoDa(sentence, callback) {
 function tweet(something) {
   var Twit = require('twit');
   var T = new Twit({
-    consumer_key: 'BZjJkcThvUM8MXndMPaCqUXQL',
-    consumer_secret: '2w1HLvIBVCNVOWHVNJMF7pSX9EO3DwV9IjfMpPsDdIEEr9GC0f',
-    access_token: '2837844623-ZM3548SVpuVasKXBQFgTqUSOL8sLB2NOZmSfhza',
-    access_token_secret: 'jPyWIKhr3yrju909DNeTXWxGHZ59IixRSkAvx3uWgVlTu'
+    consumer_key: config[keys][consumer_key],
+    consumer_secret: config[keys][consumer_secret],
+    access_token: config[keys][access_token],
+    access_token_secret: config[keys][access_token_secret]
   });
   T.post('statuses/update', {
     status: something

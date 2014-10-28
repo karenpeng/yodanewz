@@ -1,5 +1,4 @@
-var hint = document.getElementById('hint');
-hint.style.display = 'none';
+$('#askingForInput').hide();
 
 $.ajax({
   url: '/hello',
@@ -11,11 +10,11 @@ $.ajax({
   success: function (data) {
     console.log(data);
     //var saying = encodeURIComponent(data.result);
-    var postSentence = data.result.replace(/ /g, '+');
+    var postSentence = data.result.replace(/\s/g, '+');
     var url = 'http://tts-api.com/tts.mp3?q=' + postSentence;
-    document.getElementById('voice').setAttribute("src", url);
+    $('#voice').attr("src", url);
     document.getElementById('voice').play();
-    document.getElementById('link').setAttribute("href", data.url);
+    $('#link').attr("href", data.url);
     for (var i = 0; i < data.result.length + 2; i++) {
       step(i);
     }
@@ -28,11 +27,15 @@ $.ajax({
 
     function blah(num) {
       if (num < data.result.length) {
-        $('#newz').append(data.result[num].toUpperCase());
+        $('#news').append(data.result[num].toUpperCase());
       } else if (num === data.result.length) {
-        document.getElementById('link').innerHTML = "[Hyperlink]";
+        $('#link').html("[Hyperlink]");
       } else {
-        hint.style.display = 'block';
+        $('#askingForInput').show();
+        $('#blinking').remove();
+        $('<span id="blinking">_</span>').insertAfter($('#hints'));
+        $('#news').removeAttr('id');
+        $('#link').removeAttr('link');
       }
     }
   }

@@ -5,7 +5,7 @@
     "later": "1.1.6",
     "urllib": "^1.5.2",
     "twit": "1.1.18",
-    "wordnet": "0.2.10",
+    "wordnet": "0.1.2",
     "mongoose": "3.8.18",
     "body-parser": "1.9.1"
   }
