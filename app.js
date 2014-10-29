@@ -20,19 +20,39 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
+app.listen(3000);
+
+var mongoose = require('mongoose');
+mongoose.connect(config.keys.dbName);
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback() {
+  // yay!
+  console.log('yay!');
+});
+var Newz = require('./dbmodel.js');
+
 app.get('/', function (req, res) {
   res.render('index.html');
 });
-app.get('/hello', function (req, res) {
-  //console.log("yeah")
-  action(function (result) {
-    //console.log(result)
-    res.send(result);
-  });
-});
-app.listen(3000);
+// app.get('/today', function (req, res) {
+//   //console.log("yeah")
+//   //get the data from db
+//   Newz.findOne({}, {
+//     "saying", "url"
+//   }, {
+//     limit: 1,
+//     sort: {
+//       "index": -1
+//     }
+//   }, function (err, data) {
+//     if (err) {
+//       console.error(err);
+//     }
+//     res.send(data);
+//   });
+// });
 
-//action();
 var schedule = {
   schedules: [{
     h: [23],
@@ -43,43 +63,30 @@ var schedule = {
 // var t = later.setInterval(function () {
 //   action();
 // }, sched);
+action();
+var index = 0;
 
-function action(callback) {
-  // getNews(function (data) {
-  //   yoDa(data.title, function (result) {
-  //     tweet(result + data.url);
-  //   });
-  // });
-  if (callback === null) {
-    getNews(function (data) {
-      yoDa(data.title, function (result) {
-        tweet(result + data.url);
-        //var record = new Newz()
-        //save data here man!!!!!!!
-        var date = new Date();
-        var record = new Newz({
-          "year": date.getFullYear(),
-          "month": date.getMonth(),
-          "day": date.getDate(),
-          "saying": result,
-          "url": data.url
-        });
-        record.save(function (err) {
-          if (err) return console.error(err);
-        });
+function action() {
+  getNews(function (data) {
+    yoDa(data.title, function (result) {
+      tweet(result + data.url);
+      //var record = new Newz()
+      //save data here man!!!!!!!
+      var date = new Date();
+      var record = new Newz({
+        "index": index,
+        "year": date.getFullYear(),
+        "month": date.getMonth(),
+        "day": date.getDate(),
+        "saying": result,
+        "url": data.url
       });
-    });
-  } else {
-    getNews(function (data) {
-      yoDa(data.title, function (result) {
-        var forClient = {
-          "result": result,
-          "url": data.url
-        };
-        callback(forClient);
+      record.save(function (err) {
+        if (err) return console.error(err);
       });
+      index++;
     });
-  }
+  });
 }
 
 function getNews(callback) {
@@ -133,12 +140,3 @@ function tweet(something) {
     }
   });
 }
-
-var mongoose = require('mongoose');
-mongoose.connect(config.keys.dbName);
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback() {
-  // yay!
-  console.log('yay!');
-});

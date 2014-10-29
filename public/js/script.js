@@ -1,7 +1,7 @@
 $('#askingForInput').hide();
 
 $.ajax({
-  url: '/hello',
+  url: '/today',
   method: 'GET',
   dataType: 'json',
   error: function (err) {
@@ -21,11 +21,11 @@ $.ajax({
 
     function step(num) {
       setTimeout(function () {
-        blah(num);
+        dom(num);
       }, num * 100);
     }
 
-    function blah(num) {
+    function dom(num) {
       if (num < data.result.length) {
         $('#news').append(data.result[num].toUpperCase());
       } else if (num === data.result.length) {
