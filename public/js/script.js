@@ -10,12 +10,12 @@ $.ajax({
   success: function (data) {
     console.log(data);
     //var saying = encodeURIComponent(data.result);
-    var postSentence = data.result.replace(/\s/g, '+');
+    var postSentence = data.saying.replace(/\s/g, '+');
     var url = 'http://tts-api.com/tts.mp3?q=' + postSentence;
     $('#voice').attr("src", url);
     document.getElementById('voice').play();
     $('#link').attr("href", data.url);
-    for (var i = 0; i < data.result.length + 2; i++) {
+    for (var i = 0; i < data.saying.length + 2; i++) {
       step(i);
     }
 
@@ -26,9 +26,9 @@ $.ajax({
     }
 
     function dom(num) {
-      if (num < data.result.length) {
-        $('#news').append(data.result[num].toUpperCase());
-      } else if (num === data.result.length) {
+      if (num < data.saying.length) {
+        $('#news').append(data.saying[num].toUpperCase());
+      } else if (num === data.saying.length) {
         $('#link').html("[Hyperlink]");
       } else {
         $('#askingForInput').show();

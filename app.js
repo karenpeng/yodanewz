@@ -1,10 +1,13 @@
 var express = require('express');
 var app = express();
 var ejs = require('ejs');
-var fs = require("fs");
 var bodyParser = require('body-parser');
-var later = require('later');
 var config = require('./config.json');
+var unirest = require('unirest');
+var Newz = require('./dbmodel.js');
+var mongoose = require('mongoose');
+var Twit = require('twit');
+var later = require('later');
 // Set up the view directory
 app.set("views", __dirname);
 
@@ -22,7 +25,6 @@ app.use(bodyParser.json());
 
 app.listen(3000);
 
-var mongoose = require('mongoose');
 mongoose.connect(config.keys.dbName);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -30,28 +32,37 @@ db.once('open', function callback() {
   // yay!
   console.log('yay!');
 });
-var Newz = require('./dbmodel.js');
 
 app.get('/', function (req, res) {
   res.render('index.html');
 });
-// app.get('/today', function (req, res) {
-//   //console.log("yeah")
-//   //get the data from db
-//   Newz.findOne({}, {
-//     "saying", "url"
-//   }, {
-//     limit: 1,
-//     sort: {
-//       "index": -1
-//     }
-//   }, function (err, data) {
-//     if (err) {
-//       console.error(err);
-//     }
-//     res.send(data);
-//   });
+
+// app.get('/test', function (req, res) {
+//   res.send(test);
 // });
+
+app.get('/today', function (req, res) {
+  //get the data from db
+  var query = {};
+  var selet = 'saying url';
+  var option = {
+    limit: 1,
+    sort: {
+      "date": -1
+    }
+  };
+  Newz.findOne(query, selet, option, function (err, data) {
+    if (err) {
+      console.error(err);
+    }
+    console.log(data);
+    res.send(data);
+  });
+});
+
+app.get('/search', function (req, res) {
+
+});
 
 var schedule = {
   schedules: [{
@@ -63,31 +74,37 @@ var schedule = {
 // var t = later.setInterval(function () {
 //   action();
 // }, sched);
+
 action();
-var index = 0;
 
 function action() {
   getNews(function (data) {
     yoDa(data.title, function (result) {
-      tweet(result + data.url);
-      //var record = new Newz()
-      //save data here man!!!!!!!
+      //tweet(result + data.url);
       var date = new Date();
+      var yyyy = date.getFullYear();
+      var mm = date.getMonth() + 1;
+      var dd = date.getDate();
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+      var today = yyyy.toString() + '/' + mm.toString() + '/' + dd;
       var record = new Newz({
-        "index": index,
-        "year": date.getFullYear(),
-        "month": date.getMonth(),
-        "day": date.getDate(),
+        "date": today,
         "saying": result,
         "url": data.url
       });
       record.save(function (err) {
         if (err) return console.error(err);
       });
-      index++;
     });
   });
 }
+
+//var test = {};
 
 function getNews(callback) {
   var urllib = require('urllib');
@@ -101,6 +118,7 @@ function getNews(callback) {
       console.error(err);
     }
     //just want one most popular article
+    //test = data;
     var rawData = {
       "url": data.results[0].url,
       "title": data.results[0].title
@@ -110,7 +128,6 @@ function getNews(callback) {
 }
 
 function yoDa(sentence, callback) {
-  var unirest = require('unirest');
   //var postSentence = sentence.replace(/ /g, '+');
   var postSentence = encodeURIComponent(sentence);
   //console.log(postSentence);
@@ -125,7 +142,6 @@ function yoDa(sentence, callback) {
 }
 
 function tweet(something) {
-  var Twit = require('twit');
   var T = new Twit({
     consumer_key: config.keys.consumer_key,
     consumer_secret: config.keys.consumer_secret,

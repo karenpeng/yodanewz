@@ -1,25 +1,18 @@
 var mongoose = require('mongoose');
-var newzSchema = mongoose.Schema('Newz', {
-  "index": {
-    type: Number
-  },
-  "year": {
+var newzSchema = mongoose.Schema({
+  'date': {
     type: String
   },
-  "month": {
+  'saying': {
     type: String
   },
-  "day": {
-    type: String
-  },
-  "saying": {
-    type: String
-  },
-  "url": {
+  'url': {
     type: String
   }
 });
 
-var Newz = mongoose.model('Newz', newzSchema);
-
-module.exports = Newz;
+newzSchema.index({
+  master_id: 1,
+  date: 1
+});
+module.exports = mongoose.model('Newz', newzSchema);
