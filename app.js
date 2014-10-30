@@ -68,7 +68,7 @@ app.get('/today', function (req, res) {
 
 app.post('/search', jsonParser, function (req, res) {
   if (!req.body) return res.sendStatus(400);
-  console.log(req.body.str);
+  //console.log(req.body.str);
   var query = {
     'date': req.body.str
   };
@@ -77,7 +77,8 @@ app.post('/search', jsonParser, function (req, res) {
     if (err) {
       console.error(err);
     }
-    res.send(data);
+    console.log(data);
+    res.json(data);
   });
 });
 
