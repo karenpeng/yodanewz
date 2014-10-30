@@ -2,11 +2,12 @@
   <head>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   </head>
   <body>
     <audio id="voice"></audio>
     <div id="wrap">
-      <pre>
+      <pre id="font1">
         <font>
           .--.           ____    ____  ______    _______       ___        .__   __.  ___________    __    ____  ________
 ::\`--._,'.::.`._.--'/:: \   \  /   / /  __  \  |       \     /   \       |  \ |  | |   ____\   \  /  \  /   / |       /
@@ -19,20 +20,20 @@
       <div id="showingNews">
         <p>-> NEWZ TODAY:</p>
         <span class="newz" id="news"></span>
-        <span id="blinking">I</span>
+        <span id="blinking">.</span>
         <a id="link"></a>
       </div>
       <div id="askingForInput">
-       <p class="hintz" id="hints">-> NEWZ IN ΩTHER DATE, TYPE MM/DD/YYYY:</p>
-       <p id="input"></p>
+       <p class="hintz" id="hints">-> NEWZ IN OTHER DATE, TYPE YYYY/MM/DD:</p>
+       <span class="typing" id="input"></span>
       </div>
    </div>
   </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="js/table.js"></script>
   <script type="text/javascript" src="js/script.js"></script>
   <script type="text/javascript">
-/*
-                    ____
+
+/*                    ____
                   _.' :  `._
               .-.'`.  ;   .'`.-.
      __      / : ___\ ;  /___ ; \      __

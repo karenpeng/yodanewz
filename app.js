@@ -17,11 +17,18 @@ app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
 
+// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
   extended: false
 }));
 
-app.use(bodyParser.json());
+// create application/json parser
+var jsonParser = bodyParser.json();
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({
+  extended: false
+});
 
 app.listen(3000);
 
@@ -55,13 +62,23 @@ app.get('/today', function (req, res) {
     if (err) {
       console.error(err);
     }
-    console.log(data);
     res.send(data);
   });
 });
 
-app.get('/search', function (req, res) {
-
+app.post('/search', jsonParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400);
+  console.log(req.body.str);
+  var query = {
+    'date': req.body.str
+  };
+  var selet = 'saying url';
+  Newz.findOne(query, selet, function (err, data) {
+    if (err) {
+      console.error(err);
+    }
+    res.send(data);
+  });
 });
 
 var schedule = {
@@ -75,12 +92,12 @@ var schedule = {
 //   action();
 // }, sched);
 
-action();
+//action();
 
 function action() {
   getNews(function (data) {
     yoDa(data.title, function (result) {
-      //tweet(result + data.url);
+      tweet(result + data.url);
       var date = new Date();
       var yyyy = date.getFullYear();
       var mm = date.getMonth() + 1;
@@ -91,7 +108,7 @@ function action() {
       if (mm < 10) {
         mm = '0' + mm;
       }
-      var today = yyyy.toString() + '/' + mm.toString() + '/' + dd;
+      var today = yyyy.toString() + '/' + mm.toString() + '/' + dd.toString();
       var record = new Newz({
         "date": today,
         "saying": result,
