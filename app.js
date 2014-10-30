@@ -82,16 +82,10 @@ app.post('/search', jsonParser, function (req, res) {
   });
 });
 
-var schedule = {
-  schedules: [{
-    h: [23],
-    m: [50]
-  }]
-};
-// var sched = later.schedule(schedule);
-// var t = later.setInterval(function () {
-//   action();
-// }, sched);
+var sched = later.parse.recur().on('23:50:00').time();
+var t = later.setInterval(function () {
+  action();
+}, sched);
 
 //action();
 
