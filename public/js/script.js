@@ -1,43 +1,42 @@
-//$('#font1').hide();
-//$('#showingNews').hide();
+$('#font1').hide();
+$('#showingNews').hide();
 
-// setTimeout(
-//   function () {
-//     $('#font1').show();
-//   }, 600
-// );
-// setTimeout(
-//   function () {
-//     $('#font1').css('height', '40px');
-//   }, 1200
-// );
-// setTimeout(
-//   function () {
-//     $('#font1').css('height', '56px');
-//   }, 1800
-// );
-// setTimeout(
-//   function () {
-//     $('#font1').css('height', '76px');
-//   }, 2400
-// );
-// setTimeout(
-//   function () {
-//     $('#font1').css('height', '110px');
-//   }, 3000
-// );
-// setTimeout(
-//   function () {
-//     $('#showingNews').show();
-//   }, 3600
-// );
-// setTimeout(
-//   function () {
-//     today();
-//   }, 5500
-// );
+setTimeout(
+  function () {
+    $('#font1').show();
+  }, 600
+);
+setTimeout(
+  function () {
+    $('#font1').css('height', '40px');
+  }, 1200
+);
+setTimeout(
+  function () {
+    $('#font1').css('height', '56px');
+  }, 1800
+);
+setTimeout(
+  function () {
+    $('#font1').css('height', '76px');
+  }, 2400
+);
+setTimeout(
+  function () {
+    $('#font1').css('height', '110px');
+  }, 3000
+);
+setTimeout(
+  function () {
+    $('#showingNews').show();
+  }, 3600
+);
+setTimeout(
+  function () {
+    today();
+  }, 5500
+);
 
-today();
 var asking = false;
 
 function today() {
@@ -56,58 +55,79 @@ function today() {
 }
 
 function sayIt(data) {
-  if (data === undefined) {
-    var words = "On mars, the news seems to be, oooooops";
-    say_show(words);
-  } else {
-    say_show(data.saying, data.url);
-  }
-
-  function say_show(sentence, url) {
-    var postSentence = sentence.replace(/\s/g, '+');
-    var mp3 = 'http://tts-api.com/tts.mp3?q=' + postSentence;
-    $('#voice').attr("src", mp3);
-    document.getElementById('voice').play();
-    $('#news').removeAttr('id');
-    $('#wrap').append('<span class="newz" id="news"></span>');
-    $('#wrap').append('<span id="blinking">_</span>');
-    for (var i = 0; i < sentence.length + 2; i++) {
-      step(i, sentence, url);
-    }
-  }
-
-  function step(num, sentence, url) {
+  if (data === 'mars') {
+    var words = "On mars, the newz seems to be, oooooops";
+    say(words);
     setTimeout(function () {
-      dom(num, sentence, url);
-    }, num * 100);
+      show(words);
+    }, 600);
+  } else if (data === 'wtf') {
+    var a = Math.floor(Math.random() * A.length);
+    var b = Math.floor(Math.random() * B.length);
+    var c = Math.floor(Math.random() * C.length);
+    var sigh = Math.random() > 0.5 ? '. ummmmm' : '. yesssssssss.';
+    var wtf = A[a] + ' + ' + B[b] + ' = ' + C[c] + sigh;
+    var wtf2 = A[a] + ' plus ' + B[b] + ' = ' + C[c] + sigh;
+    say(wtf2);
+    setTimeout(function () {
+      show(wtf);
+    }, 600);
+  } else {
+    say(data.saying, data.url);
+    setTimeout(function () {
+      show(data.saying, data.url);
+    }, 600);
   }
+}
 
-  function dom(num, sentence, url) {
-    if (num < sentence.length) {
-      if (num === 0) {
-        $("#news").append('<p></p>');
-      }
-      $('#news').append(sentence[num].toUpperCase());
-    } else if (num === sentence.length) {
-      if (url !== undefined) {
-        $('<a id="link"></a>').insertAfter('#news');
-        $('#link').attr('src', url);
-        $('#link').html("[Hyperlink]");
-      }
-      asking = true;
-    } else {
-      ask();
+function say(sentence, url) {
+  console.log(sentence);
+  var postSentence = sentence.replace(/\s/g, '+');
+  var mp3 = 'http://tts-api.com/tts.mp3?q=' + postSentence;
+  $('#voice').attr("src", mp3);
+  document.getElementById('voice').play();
+}
+
+function show(sentence, url) {
+  $('#news').removeAttr('id');
+  $('#wrap').append('<span class="newz" id="news"></span>');
+  $('#wrap').append('<span id="blinking">.</span>');
+  for (var i = 0; i < sentence.length + 2; i++) {
+    step(i, sentence, url);
+  }
+}
+
+function step(num, sentence, url) {
+  setTimeout(function () {
+    dom(num, sentence, url);
+  }, num * 100);
+}
+
+function dom(num, sentence, url) {
+  if (num < sentence.length) {
+    if (num === 0) {
+      $("#news").append('<p></p>');
     }
+    $('#news').append(sentence[num].toUpperCase());
+  } else if (num === sentence.length) {
+    if (url !== undefined) {
+      $('#wrap').append('<a id="link" target="_blank"></a>');
+      $('#link').attr('href', url);
+      $('#link').html("[Hyperlink]");
+    }
+    asking = true;
+  } else {
+    ask();
   }
+}
 
-  function ask() {
-    $("#wrap").append('<p class="hintz" id="hints">-> NEWZ IN OTHER DATE, TYPE YYYY/MM/DD:</p><span class="typing" id="input"></span>');
-    $('#blinking').remove();
-    //$('<span id="blinking">_</span>').insertAfter($('#hints'));
-    $("#wrap").append('<span id="blinking">_</span>');
-    $('#news').removeAttr('id');
-    $('#link').removeAttr('id');
-  }
+function ask() {
+  $("#wrap").append('<p class="hintz" id="hints">-> NEWZ IN OTHER DATE, TYPE YYYY/MM/DD:</p><span class="typing" id="input"></span>');
+  $('#blinking').remove();
+  //$('<span id="blinking">_</span>').insertAfter($('#hints'));
+  $("#wrap").append('<span id="blinking">.</span>');
+  $('#news').removeAttr('id');
+  $('#link').removeAttr('id');
 }
 
 $(window).keydown(function (e) {
@@ -119,7 +139,7 @@ $(window).keydown(function (e) {
       if (result !== null) {
         askForNewz(result[0]);
       } else {
-        //do the wtf engine here
+        sayIt('wtf');
       }
       $('#input').removeAttr('id');
       $('#blinking').remove();
@@ -131,7 +151,7 @@ $(window).keydown(function (e) {
       } else {
         var key = e.which.toString();
         if (keycode[key]) {
-          $('#input').append(keycode[key]);
+          $('#input').append(keycode[key].toUpperCase());
         }
       }
     }
@@ -158,7 +178,7 @@ function askForNewz(something) {
     success: function (data) {
       console.log(data);
       if (data === null) {
-        sayIt();
+        sayIt('mars');
       } else {
         sayIt(data);
       }

@@ -14,7 +14,7 @@ body{
   font-family: Proggy;
 }
 #wrap{
-  margin: 10px;
+  margin: 0 10px;
 }
 #font1{
   height: 20px;
@@ -28,7 +28,7 @@ a{
   font-size: 16px;
   color: white;
 }
-a :hover{
+a:hover{
   cursor: pointer;
 }
 #blinking{
