@@ -215,7 +215,7 @@ function mkHashTag(sentence, callback) {
         }
         if (data === true) {
           //console.log(result[0] + ' is noun');
-          hashTags += ('#' + result[0]);
+          hashTags += ('#' + result[0] + ' ');
         }
         resultCount++;
         if (resultCount === wordCount) {
