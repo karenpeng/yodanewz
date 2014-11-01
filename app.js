@@ -63,7 +63,7 @@ app.get('/today', function (req, res) {
   };
   Newz.findOne(query, selet, option, function (err, data) {
     if (err) {
-      console.error(err);
+      return console.error(err);
     }
     res.send(data);
   });
@@ -78,7 +78,7 @@ app.post('/search', jsonParser, function (req, res) {
   var selet = 'saying url';
   Newz.findOne(query, selet, function (err, data) {
     if (err) {
-      console.error(err);
+      return console.error(err);
     }
     console.log(data);
     res.json(data);
@@ -100,29 +100,34 @@ function action() {
   getNews(function (data) {
     var title = data.title;
     var url = data.url;
-    var hashTags = mkHashTag(title);
-
-    yoDa(title, function (result) {
-      //make the hastag here
-      tweet(result + hashTags);
-      var date = new Date();
-      var yyyy = date.getFullYear();
-      var mm = date.getMonth() + 1;
-      var dd = date.getDate();
-      if (dd < 10) {
-        dd = '0' + dd;
-      }
-      if (mm < 10) {
-        mm = '0' + mm;
-      }
-      var today = yyyy.toString() + '/' + mm.toString() + '/' + dd.toString();
-      var record = new Newz({
-        "date": today,
-        "saying": result,
-        "url": url
-      });
-      record.save(function (err) {
-        if (err) return console.error(err);
+    mkHashTag(title, function (hashTagsss) {
+      var hashTags = hashTagsss;
+      yoDa(title, function (result) {
+        var str = result + hashTags;
+        if (str.length > 140) {
+          tweet(result);
+        } else {
+          tweet(str);
+        }
+        var date = new Date();
+        var yyyy = date.getFullYear();
+        var mm = date.getMonth() + 1;
+        var dd = date.getDate();
+        if (dd < 10) {
+          dd = '0' + dd;
+        }
+        if (mm < 10) {
+          mm = '0' + mm;
+        }
+        var today = yyyy.toString() + '/' + mm.toString() + '/' + dd.toString();
+        var record = new Newz({
+          "date": today,
+          "saying": result,
+          "url": url
+        });
+        record.save(function (err) {
+          if (err) return console.error(err);
+        });
       });
     });
   });
@@ -138,7 +143,7 @@ function getNews(callback) {
     dataType: 'json'
   }, function (err, data, res) {
     if (err) {
-      console.error(err);
+      return console.error(err);
     }
     //just want one most popular article
     //test = data;
@@ -146,39 +151,33 @@ function getNews(callback) {
       "url": data.results[0].url,
       "title": data.results[0].title
     };
-    console.log(rawData.title);
+    //console.log(rawData.title);
     callback(rawData);
   });
 }
 
 function yoDa(sentence, callback) {
-  //var postSentence = sentence.replace(/\w/g, '+');
+  //var postSentence = sentence.replace(/\W/g, '+');
   var postSentence = encodeURIComponent(sentence);
-  var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence + config.keys.yodaKey;
+  //console.log('postsentence ' + postSentence);
+  var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence;
 
   urllib.request(
     url, {
       method: 'GET',
-      dataType: 'json',
-      header: {
+      headers: {
         "X-Mashape-Key": config.keys.yodaKey
-      },
-      key: config.keys.yodaKey
+      }
     }, function (err, data, res) {
       if (err) {
-        console.error(err);
+        return console.error(err);
       }
-      console.log(data);
-      //callback(data.body);
+      //console.log(data);
+      var value = data.toString('utf-8');
+      console.log(value);
+      callback(value);
     }
   );
-  // unirest.get(url)
-  //   .header("X-Mashape-Key", config.keys.yodaKey)
-  //   .end(function (result) {
-  //     //console.log(result.status, result.headers, result.body);
-  //     callback(result.body);
-  //   });
-
 }
 
 function tweet(something) {
@@ -192,12 +191,12 @@ function tweet(something) {
     status: something
   }, function (err, data, res) {
     if (err) {
-      console.log(err);
+      return console.error(err);
     }
   });
 }
 
-function mkHashTag(sentence) {
+function mkHashTag(sentence, callback) {
   var hashTags = '';
   var wordCount = 0;
   var resultCount = 0;
@@ -211,14 +210,17 @@ function mkHashTag(sentence) {
     if (result[0] !== null) {
       wordCount++;
       wn.isNoun(result[0], function (err, data) {
+        if (err) {
+          return console.error(err);
+        }
         if (data === true) {
           //console.log(result[0] + ' is noun');
           hashTags += ('#' + result[0]);
         }
         resultCount++;
         if (resultCount === wordCount) {
-          //console.log(hashTags);
-          return hashTags;
+          console.log(hashTags);
+          callback(hashTags);
         }
       });
     }
