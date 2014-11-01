@@ -86,15 +86,15 @@ app.post('/search', jsonParser, function (req, res) {
 });
 
 //UTC minus 4 equals to new york time
-var sched = later.parse.recur().on('03:50:00').time();
 later.date.UTC();
+var sched = later.parse.recur().on('03:50:00').time();
 var next = later.schedule(sched).next(10);
 console.log(next);
 later.setInterval(function () {
   action();
 }, sched);
 
-action();
+//action();
 
 function action() {
   getNews(function (data) {
