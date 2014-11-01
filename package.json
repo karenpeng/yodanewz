@@ -8,6 +8,6 @@
     "twit": "^1.1.18",
     "unirest": "^0.2.9",
     "urllib": "^2.0.1",
-    "wordnet": "^0.1.2"
+    "wordnet-magic": "^0.2.5"
   }
 }

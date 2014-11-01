@@ -3,10 +3,13 @@ var app = express();
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var config = require('./config.json');
+var urllib = require('urllib');
 var unirest = require('unirest');
 var Newz = require('./dbmodel.js');
 var mongoose = require('mongoose');
 var Twit = require('twit');
+var wordNet = require('wordnet-magic');
+var wn = wordNet();
 var later = require('later');
 // Set up the view directory
 app.set("views", __dirname);
@@ -30,7 +33,7 @@ var urlencodedParser = bodyParser.urlencoded({
   extended: false
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 
 mongoose.connect(config.keys.dbName);
 var db = mongoose.connection;
@@ -82,17 +85,26 @@ app.post('/search', jsonParser, function (req, res) {
   });
 });
 
-var sched = later.parse.recur().on('23:50:00').time();
-var t = later.setInterval(function () {
+//UTC minus 4 equals to new york time
+var sched = later.parse.recur().on('03:50:00').time();
+later.date.UTC();
+var next = later.schedule(sched).next(10);
+console.log(next);
+later.setInterval(function () {
   action();
 }, sched);
 
-//action();
+action();
 
 function action() {
   getNews(function (data) {
-    yoDa(data.title, function (result) {
-      tweet(result + data.url);
+    var title = data.title;
+    var url = data.url;
+    var hashTags = mkHashTag(title);
+
+    yoDa(title, function (result) {
+      //make the hastag here
+      tweet(result + hashTags);
       var date = new Date();
       var yyyy = date.getFullYear();
       var mm = date.getMonth() + 1;
@@ -107,7 +119,7 @@ function action() {
       var record = new Newz({
         "date": today,
         "saying": result,
-        "url": data.url
+        "url": url
       });
       record.save(function (err) {
         if (err) return console.error(err);
@@ -119,7 +131,6 @@ function action() {
 //var test = {};
 
 function getNews(callback) {
-  var urllib = require('urllib');
   var key = config.keys.nytimeKey;
   var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/1.json?api-key=' + key;
   urllib.request(url, {
@@ -135,21 +146,38 @@ function getNews(callback) {
       "url": data.results[0].url,
       "title": data.results[0].title
     };
+    console.log(rawData.title);
     callback(rawData);
   });
 }
 
 function yoDa(sentence, callback) {
-  //var postSentence = sentence.replace(/ /g, '+');
+  //var postSentence = sentence.replace(/\w/g, '+');
   var postSentence = encodeURIComponent(sentence);
-  //console.log(postSentence);
-  var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence;
-  unirest.get(url)
-    .header("X-Mashape-Key", config.keys.yodaKey)
-    .end(function (result) {
-      //console.log(result.status, result.headers, result.body);
-      callback(result.body);
-    });
+  var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence + config.keys.yodaKey;
+
+  urllib.request(
+    url, {
+      method: 'GET',
+      dataType: 'json',
+      header: {
+        "X-Mashape-Key": config.keys.yodaKey
+      },
+      key: config.keys.yodaKey
+    }, function (err, data, res) {
+      if (err) {
+        console.error(err);
+      }
+      console.log(data);
+      //callback(data.body);
+    }
+  );
+  // unirest.get(url)
+  //   .header("X-Mashape-Key", config.keys.yodaKey)
+  //   .end(function (result) {
+  //     //console.log(result.status, result.headers, result.body);
+  //     callback(result.body);
+  //   });
 
 }
 
@@ -165,6 +193,34 @@ function tweet(something) {
   }, function (err, data, res) {
     if (err) {
       console.log(err);
+    }
+  });
+}
+
+function mkHashTag(sentence) {
+  var hashTags = '';
+  var wordCount = 0;
+  var resultCount = 0;
+  var words = sentence.split(' ');
+  words.forEach(function (word) {
+    //console.log(word);
+    var wordLow = word.toLowerCase();
+    var pattern = /\w+/g;
+    var result = pattern.exec(wordLow);
+    //console.log(result[0]);
+    if (result[0] !== null) {
+      wordCount++;
+      wn.isNoun(result[0], function (err, data) {
+        if (data === true) {
+          //console.log(result[0] + ' is noun');
+          hashTags += ('#' + result[0]);
+        }
+        resultCount++;
+        if (resultCount === wordCount) {
+          //console.log(hashTags);
+          return hashTags;
+        }
+      });
     }
   });
 }

@@ -66,3 +66,8 @@ a:hover{
 input:focus{
   outline: 0;
 }
+#followMe{
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+}

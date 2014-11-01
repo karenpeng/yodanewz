@@ -1,5 +1,6 @@
 $('#font1').hide();
 $('#showingNews').hide();
+var asking = false;
 
 setTimeout(
   function () {
@@ -37,8 +38,6 @@ setTimeout(
   }, 5500
 );
 
-var asking = false;
-
 function today() {
   $.ajax({
     url: '/today',
@@ -60,7 +59,7 @@ function sayIt(data) {
     say(words);
     setTimeout(function () {
       show(words);
-    }, 600);
+    }, 800);
   } else if (data === 'wtf') {
     var a = Math.floor(Math.random() * A.length);
     var b = Math.floor(Math.random() * B.length);
@@ -71,12 +70,12 @@ function sayIt(data) {
     say(wtf2);
     setTimeout(function () {
       show(wtf);
-    }, 600);
+    }, 800);
   } else {
     say(data.saying, data.url);
     setTimeout(function () {
       show(data.saying, data.url);
-    }, 600);
+    }, 800);
   }
 }
 
@@ -132,8 +131,8 @@ function ask() {
 
 $(window).keydown(function (e) {
   if (asking) {
-    e.preventDefault();
     if (e.which === 13) {
+      e.preventDefault();
       var value = $('#input').html();
       var result = check(value);
       if (result !== null) {
@@ -145,12 +144,14 @@ $(window).keydown(function (e) {
       $('#blinking').remove();
     } else {
       if (e.which === 8 || e.which === 46) {
+        e.preventDefault();
         var all = $('#input').html();
         var minus = all.slice(0, all.length - 1);
         $("#input").html(minus);
       } else {
         var key = e.which.toString();
-        if (keycode[key]) {
+        if (keycode[key] !== undefined) {
+          e.preventDefault();
           $('#input').append(keycode[key].toUpperCase());
         }
       }
