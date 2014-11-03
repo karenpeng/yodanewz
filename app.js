@@ -158,19 +158,20 @@ function getNews(callback) {
 
 function yoDa(sentence, callback) {
   //var postSentence = sentence.replace(/\W/g, '+');
-  //var postSentence = encodeURIComponent(sentence);
+  var postSentence = encodeURIComponent(sentence);
   //console.log('postsentence ' + postSentence);
-  var url = 'https://yoda.p.mashape.com/yoda?';
+  var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence;
   urllib.request(
     url, {
       method: 'GET',
-      data: {
-        'sentence': sentence
-      },
+      // data: {
+      //   'sentence': sentence
+      // },
       dataType: 'text',
       headers: {
         "X-Mashape-Key": config.keys.yodaKey
-      }
+      },
+      timeout: 60000
     }, function (err, data, res) {
       if (err) {
         return console.error(err);
