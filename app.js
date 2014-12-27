@@ -2,15 +2,18 @@ var express = require('express');
 var app = express();
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
-var config = require('./config.json');
+var config = require('./serverJs/config.json');
 var urllib = require('urllib');
 var unirest = require('unirest');
 var Newz = require('./dbmodel.js');
 var mongoose = require('mongoose');
-var Twit = require('twit');
-var wordNet = require('wordnet-magic');
-var wn = wordNet();
 var later = require('later');
+
+var getNews = require('./serverJs/ynt.js');
+var yoDa = require('./serverJs/yoDa.js');
+var tweet = require('./serverJs/bot.js');
+var mkHashTag = require('./serverJs/hashTag.js');
+
 // Set up the view directory
 app.set("views", __dirname);
 
@@ -94,7 +97,7 @@ later.setInterval(function () {
   action();
 }, sched);
 
-//action();
+action();
 
 function action() {
   getNews(function (data) {
@@ -130,101 +133,5 @@ function action() {
         });
       });
     });
-  });
-}
-
-//var test = {};
-
-function getNews(callback) {
-  var key = config.keys.nytimeKey;
-  var url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/1.json?api-key=' + key;
-  urllib.request(url, {
-    method: 'GET',
-    dataType: 'json'
-  }, function (err, data, res) {
-    if (err) {
-      return console.error(err);
-    }
-    //just want one most popular article
-    //test = data;
-    var rawData = {
-      "url": data.results[0].url,
-      "title": data.results[0].title
-    };
-    //console.log(rawData.title);
-    callback(rawData);
-  });
-}
-
-function yoDa(sentence, callback) {
-  //var postSentence = sentence.replace(/\W/g, '+');
-  var postSentence = encodeURIComponent(sentence);
-  //console.log('postsentence ' + postSentence);
-  var url = 'https://yoda.p.mashape.com/yoda?sentence=' + postSentence;
-  urllib.request(
-    url, {
-      method: 'GET',
-      // data: {
-      //   'sentence': sentence
-      // },
-      dataType: 'text',
-      headers: {
-        "X-Mashape-Key": config.keys.yodaKey
-      },
-      timeout: 60000
-    }, function (err, data, res) {
-      if (err) {
-        return console.error(err);
-      }
-      //console.log(data);
-      callback(data);
-    }
-  );
-}
-
-function tweet(something) {
-  var T = new Twit({
-    consumer_key: config.keys.consumer_key,
-    consumer_secret: config.keys.consumer_secret,
-    access_token: config.keys.access_token,
-    access_token_secret: config.keys.access_token_secret
-  });
-  T.post('statuses/update', {
-    status: something
-  }, function (err, data, res) {
-    if (err) {
-      return console.error(err);
-    }
-  });
-}
-
-function mkHashTag(sentence, callback) {
-  var hashTags = '';
-  var wordCount = 0;
-  var resultCount = 0;
-  var words = sentence.split(' ');
-  words.forEach(function (word) {
-    //console.log(word);
-    var wordLow = word.toLowerCase();
-    var pattern = /\w+/g;
-    var result = pattern.exec(wordLow);
-    //console.log(result[0]);
-    if (result[0] !== null) {
-      wordCount++;
-      wn.isNoun(result[0], function (err, data) {
-        if (err) {
-          return console.error(err);
-        }
-        if (data === true) {
-          //console.log(result[0] + ' is noun');
-          hashTags += ('#' + result[0] + ' ');
-        }
-        resultCount++;
-        if (resultCount === wordCount) {
-          console.log(hashTags);
-          callback(hashTags);
-        }
-      });
-    }
   });
 }
