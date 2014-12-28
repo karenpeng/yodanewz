@@ -1,13 +1,19 @@
 <script type="text/javascript">
+window.onload = function(){
+  //test(1)
+}
 
-  function test() {
+index = 1;
+document.onmousedown = function(){
+  test(index)
+  index ++
+}
+
+function test(num) {
+  //console.log(speechSynthesis);
     var msgs = new SpeechSynthesisUtterance();
     var voices = window.speechSynthesis.getVoices();
-    msgs.voice = voices[10]; // Note: some voices don't support altering params
-    msgs.voice = voices.filter(function (voice) {
-      return voice.name == 'Ralph';
-      //return voice.name == 'Trinoids';
-    })[0];
+    console.log(voices.length)
     msgs.voiceURI = 'native';
     msgs.volume = 1; // 0 to 1
     msgs.rate = 1; // 0.1 to 10
@@ -15,9 +21,22 @@
     msgs.text = 'Hello World';
     msgs.lang = 'en-US';
 
-    speechSynthesis.speak(msgs);
 
+    //setTimeout(function(){
+      //msgs.voice = voices[33]; // Note: some voices don't support altering params
+      msgs.voice = voices.filter(function (voice) {
+        return voice.name == 'Ralph';
+        //return voice.name == 'Trinoids';
+      })[0];
+
+      if(num === 1){
+        window.speechSynthesis.resume();
+      }else{
+        window.speechSynthesis.speak(msgs);
+      }
+
+    //},1000);
   }
 
-  test()
+  //test()
 </script>

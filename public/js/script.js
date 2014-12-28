@@ -57,7 +57,7 @@
   function sayIt(data) {
     if (data === 'mars') {
       var words = "On mars, the newz seems to be, oooooops";
-      speak(words, show);
+      speak(words, null, show);
     } else if (data === 'wtf') {
       var a = Math.floor(Math.random() * A.length);
       var b = Math.floor(Math.random() * B.length);
@@ -65,7 +65,7 @@
       var sigh = Math.random() > 0.5 ? '. ummmmm' : '. yesssssssss.';
       var wtf = A[a] + ' + ' + B[b] + ' = ' + C[c] + sigh;
       var wtf2 = A[a] + ' plus ' + B[b] + ' = ' + C[c] + sigh;
-      speak(wtf2, show);
+      speak(wtf2, null, show);
     } else {
       speak(data.saying, data.url, show);
     }
@@ -93,7 +93,7 @@
       }
       $('#news').append(sentence[num].toUpperCase());
     } else if (num === sentence.length) {
-      if (url !== undefined) {
+      if (url !== null) {
         $('#wrap').append('<a id="link" target="_blank"></a>');
         $('#link').attr('href', url);
         $('#link').html("[Hyperlink]");
