@@ -2,11 +2,11 @@ var express = require('express');
 var app = express();
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
-var config = require('./serverJs/config.json');
-var Newz = require('./dbmodel.js');
 var mongoose = require('mongoose');
 var later = require('later');
 
+var config = require('./serverJs/config.json');
+var Newz = require('./serverJs/dbmodel.js');
 var getNews = require('./serverJs/ynt.js');
 var yoDa = require('./serverJs/yoDa.js');
 var tweet = require('./serverJs/bot.js');
@@ -96,7 +96,7 @@ later.setInterval(function () {
   action();
 }, sched);
 
-action();
+//action();
 
 function action() {
   var ran = Math.random();
@@ -128,42 +128,42 @@ function action() {
 }
 
 function yodaandTweet(title, url) {
-  // mkHashTag(title, function (hashTagsss) {
-  //   var hashTags = hashTagsss;
-  //console.log('hashTags ' + hashTags);
-  yoDa(title, function (result) {
-    //console.log(result);
-    // var str = result + hashTags;
-    //console.log(str);
-    if (result.length > 140) {
-      tweet(title);
-      // } else if (str.length > 140) {
-      //   tweet(result);
+  mkHashTag(title, function (hashTagsss) {
+    var hashTags = hashTagsss;
+    console.log('hashTags ' + hashTags);
+    yoDa(title, function (result) {
+      //console.log(result);
+      var str = result + hashTags;
+      //console.log(str);
+      if (result.length > 140) {
+        tweet(title);
+      } else if (str.length > 140) {
+        tweet(result);
+      } else {
+        tweet(str);
+      }
       // } else {
-      //   tweet(str);
+      //   tweet(result);
       // }
-    } else {
-      tweet(result);
-    }
-    var date = new Date();
-    var yyyy = date.getFullYear();
-    var mm = date.getMonth() + 1;
-    var dd = date.getDate();
-    if (dd < 10) {
-      dd = '0' + dd;
-    }
-    if (mm < 10) {
-      mm = '0' + mm;
-    }
-    var today = yyyy.toString() + '/' + mm.toString() + '/' + dd.toString();
-    var record = new Newz({
-      "date": today,
-      "saying": result,
-      "url": url
-    });
-    record.save(function (err) {
-      if (err) return console.error(err);
+      var date = new Date();
+      var yyyy = date.getFullYear();
+      var mm = date.getMonth() + 1;
+      var dd = date.getDate();
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+      var today = yyyy.toString() + '/' + mm.toString() + '/' + dd.toString();
+      var record = new Newz({
+        "date": today,
+        "saying": result,
+        "url": url
+      });
+      record.save(function (err) {
+        if (err) return console.error(err);
+      });
     });
   });
-  //});
 }
