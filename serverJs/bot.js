@@ -18,3 +18,7 @@ function tweet(something) {
     }
   });
 }
+
+function rss() {
+
+}

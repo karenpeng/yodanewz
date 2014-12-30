@@ -3,7 +3,7 @@ var urllib = require('urllib');
 module.exports = getReddit;
 
 function getReddit(callback) {
-  var subReddit = Math.random() > 0.5 ? 'worldnews' : 'showerthoughts';
+  var subReddit = Math.random() > 0.6 ? 'news' : 'showerthoughts';
   var url = 'http://api.reddit.com/r/' + subReddit + '/hot';
   urllib.request(url, {
     method: 'GET',

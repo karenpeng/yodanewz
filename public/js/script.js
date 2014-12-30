@@ -39,21 +39,6 @@
     }, 5500
   );
 
-  function today() {
-    $.ajax({
-      url: '/today',
-      method: 'GET',
-      dataType: 'json',
-      error: function (err) {
-        throw err;
-      },
-      success: function (data) {
-        console.log(data);
-        sayIt(data);
-      }
-    });
-  }
-
   function sayIt(data) {
     if (data === 'mars') {
       var words = "On mars, the newz seems to be, oooooops";
@@ -147,6 +132,21 @@
     var pattern = /\d\d\d\d\/\d\d\/\d\d/;
     var result = pattern.exec(str);
     return result;
+  }
+
+  function today() {
+    $.ajax({
+      url: '/today',
+      method: 'GET',
+      dataType: 'json',
+      error: function (err) {
+        throw err;
+      },
+      success: function (data) {
+        console.log(data);
+        sayIt(data);
+      }
+    });
   }
 
   function askForNewz(something) {
