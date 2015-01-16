@@ -90,11 +90,9 @@ app.post('/search', jsonParser, function (req, res) {
 
 //UTC minus 4 equals to new york time
 later.date.UTC();
-var sched = later.parse.recur().on('03:50:00').time();
+var sched = later.parse.recur().on('03:50:00').time(); << << << < HEAD
 var next = later.schedule(sched).next(10); << << << < HEAD
-console.log(next); === === =
-//console.log(next);
->>> >>> > 364e b2e9c76bfc2fdd954fa60bf21c8cc3d1f1ba
+console.log(next);
 later.setInterval(function () {
   action();
 }, sched);

@@ -76,5 +76,6 @@ function mkHashTag(sentence, callback) {
         }
       });
     }
-  });
-}
+  }); << << << < HEAD
+} === === =
+} >>> >>> > 364e b2e9c76bfc2fdd954fa60bf21c8cc3d1f1ba
