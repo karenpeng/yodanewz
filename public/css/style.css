@@ -1,0 +1,73 @@
+html,body{
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 0;
+}
+@font-face{
+  font-family: Proggy;
+  src: url(../font/ProggyClean.ttf);
+}
+body{
+  background-color: #33c;
+  color: white;
+  font-family: Proggy;
+}
+#wrap{
+  margin: 0 10px;
+}
+#font1{
+  height: 20px;
+  overflow: hidden;
+}
+.newz{
+  font-size: 24px;
+  /*padding: 10px;*/
+}
+a{
+  font-size: 16px;
+  color: white;
+}
+a:hover{
+  cursor: pointer;
+}
+#blinking{
+  color: #22d;
+}
+#blinking{
+  -webkit-animation:myfirst 1s; /* Chrome, Safari, Opera */
+  -webkit-animation-iteration-count:infinite;
+  animation:myfirst 1s;
+  animation-iteration-count:infinite;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes myfirst
+{
+  0%   {background:#33c;  color: #33c;}
+  50%  {background:white; color:white;}
+  100% {background:#33c;  color: #33c;}
+}
+
+/* Standard syntax */
+@keyframes myfirst
+{
+  0%   {background:#33c;  color: #33c;}
+  50%  {background:white; color:white;}
+  100% {background:#33c;  color: #33c;}
+}
+.typing{
+  background-color: #33c;
+  border: none;
+  color: white;
+  font-family: Proggy;
+  font-size: 20px;
+}
+input:focus{
+  outline: 0;
+}
+#followMe{
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+}
