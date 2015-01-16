@@ -97,7 +97,7 @@ later.setInterval(function () {
   action();
 }, sched);
 
-action();
+//action();
 
 function action() {
   var ran = Math.random();
