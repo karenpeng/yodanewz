@@ -9,7 +9,6 @@
     //   audioTag(sentence, url);
     // }
     try {
-      //tts('forever alone', 'http://reddit.com', tts, true);
       tts(sentence, url, callback);
     } catch (e) {
       console.log(e);
@@ -19,6 +18,7 @@
 
   function tts(sentence, url, callback, num) {
 
+    //browser detection
     var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
     var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
@@ -59,7 +59,6 @@
     msg.onstart = function () {
       if (callback !== undefined) {
         callback(sentence, url);
-        return;
       }
     };
 
