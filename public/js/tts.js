@@ -1,11 +1,18 @@
 (function (exports) {
   function speak(sentence, url, callback) {
-    if ('speechSynthesis' in window) {
-      // You're good to go!
+    // if ('speechSynthesis' in window) {
+    //   // You're good to go!
+    //   tts(sentence, url, callback);
+    // } else {
+    //   // Ah man, speech synthesis isn't supported.
+    //   console.log("OOOPS");
+    //   audioTag(sentence, url);
+    // }
+    try {
       tts(sentence, url, callback);
-    } else {
-      // Ah man, speech synthesis isn't supported.
-      audioTag(sentence, url);
+    } catch (e) {
+      console.log(e);
+      audioTag(sentence, url, callback);
     }
   }
 
@@ -47,13 +54,19 @@
     };
   }
 
-  tts('forever alone', 'http://reddit.com', tts, true);
+  setTimeout(function () {
+    tts('forever alone', 'http://reddit.com', tts, true)
+  }, 1000);
 
-  function audioTag(sentence, url) {
+  function audioTag(sentence, url, callback) {
     var postSentence = sentence.replace(/\s/g, '+');
     var mp3 = 'http://tts-api.com/tts.mp3?q=' + postSentence;
     $('#voice').attr("src", mp3);
     document.getElementById('voice').play();
+    setTimeout(function () {
+      callback(sentence, url);
+    }, 1000);
+
   }
 
   exports.speak = speak;
