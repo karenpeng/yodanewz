@@ -57,7 +57,6 @@
   }
 
   function show(sentence, url) {
-    console.log('?')
     $('#news').removeAttr('id');
     $('#wrap').append('<span class="newz" id="news"></span>');
     $('#wrap').append('<span id="blinking">.</span>');

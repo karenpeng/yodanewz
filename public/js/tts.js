@@ -9,6 +9,7 @@
     //   audioTag(sentence, url);
     // }
     try {
+      //tts('forever alone', 'http://reddit.com', tts, true);
       tts(sentence, url, callback);
     } catch (e) {
       console.log(e);
@@ -17,6 +18,14 @@
   }
 
   function tts(sentence, url, callback, num) {
+
+    var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+    var isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+    // At least Safari 3+: "[object HTMLElementConstructor]"
+    var isChrome = !!window.chrome && !isOpera;
+
     var msg = new SpeechSynthesisUtterance();
     var voices = window.speechSynthesis.getVoices();
     //msg.voice = voices[10]; // Note: some voices don't support altering params
@@ -50,8 +59,19 @@
     msg.onstart = function () {
       if (callback !== undefined) {
         callback(sentence, url);
+        return;
       }
     };
+
+    // console.log('isSafari ', isSafari);
+    // console.log('isChrome ', isChrome);
+    // console.log('isFirefox ', isFirefox);
+    // console.log('isOpera ', isOpera);
+
+    //just for safari
+    if (isSafari) {
+      callback(sentence, url);
+    }
   }
 
   setTimeout(function () {
