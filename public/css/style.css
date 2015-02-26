@@ -9,9 +9,12 @@ html,body{
   src: url(../font/ProggyClean.ttf);
 }
 body{
-  background-color: #33c;
-  color: white;
+/*  background-color: #33c;*/
+  background-color: #222;
+/*  color: white;*/
+  color: #8ccaaa;
   font-family: Proggy;
+  text-shadow: 0px 0px 6px #8ccaaa, 0px 0px 6px #08c,0px 0px 6px #8ccaaa;
 }
 #wrap{
   margin: 0 10px;
@@ -26,13 +29,16 @@ body{
 }
 a{
   font-size: 16px;
-  color: white;
+  /*color: white;*/
+  color: #8ccaaa;
+  text-shadow: 0px 0px 3px #8ccaaa, 0px 0px 3px #08c,0px 0px 3px #8ccaaa;
 }
 a:hover{
   cursor: pointer;
 }
 #blinking{
-  color: #22d;
+/*  color: #22d;*/
+color: #8ccaaa;
 }
 #blinking{
   -webkit-animation:myfirst 1s; /* Chrome, Safari, Opera */
@@ -44,22 +50,30 @@ a:hover{
 /* Chrome, Safari, Opera */
 @-webkit-keyframes myfirst
 {
-  0%   {background:#33c;  color: #33c;}
+/*  0%   {background:#33c;  color: #33c;}
   50%  {background:white; color:white;}
-  100% {background:#33c;  color: #33c;}
+  100% {background:#33c;  color: #33c;}*/
+  0%   {background:#222;  color: #222; box-shadow: none;}
+  50%  {background:#8ccaaa; color:#8ccaaa; box-shadow: 0px 0px 3px #8ccaaa, 0px 0px 3px #08c,0px 0px 3px #8ccaaa;}
+  100% {background:#222;  color: #222; box-shadow: none;}
 }
 
 /* Standard syntax */
 @keyframes myfirst
 {
-  0%   {background:#33c;  color: #33c;}
+/*  0%   {background:#33c;  color: #33c;}
   50%  {background:white; color:white;}
-  100% {background:#33c;  color: #33c;}
+  100% {background:#33c;  color: #33c;}*/
+  0%   {background:#222;  color: #222; box-shadow: none;}
+  50%  {background:#8ccaaa; color:#8ccaaa; box-shadow: 0px 0px 3px #8ccaaa, 0px 0px 3px #08c,0px 0px 3px #8ccaaa;}
+  100% {background:#222;  color: #222; box-shadow: none;}
 }
 .typing{
-  background-color: #33c;
+/* background-color: #33c;*/
+  background-color: #222;
   border: none;
-  color: white;
+/*  color: white;*/
+  color: #8ccaaa;
   font-family: Proggy;
   font-size: 20px;
 }
